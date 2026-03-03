@@ -792,7 +792,7 @@ export default function SlimePage() {
                     {rows.map(([k, v]) => (
                       <div key={k} className="grid grid-cols-[140px_1fr] gap-2 text-xs">
                         <dt className="text-muted-foreground">{k}</dt>
-                        <dd className="text-foreground/70" dangerouslySetInnerHTML={{ __html: v }} />
+                        <dd className="min-w-0 break-words text-foreground/70" dangerouslySetInnerHTML={{ __html: v }} />
                       </div>
                     ))}
                   </dl>
