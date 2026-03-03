@@ -1,0 +1,662 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowLeft, ExternalLink } from "lucide-react";
+
+// ── Sub-components ───────────────────────────────────────────────────────────
+
+function Pill({ variant = "default", children }) {
+  const styles = {
+    default: "bg-blue-900/20 text-blue-300 border border-blue-800/40",
+    green:   "bg-green-900/20 text-green-400 border border-green-800/40",
+    gold:    "bg-amber-900/20 text-amber-400 border border-amber-800/40",
+    red:     "bg-red-900/20 text-red-400 border border-red-800/40",
+  };
+  return (
+    <span className={`inline-block text-[0.65rem] tracking-widest uppercase px-2.5 py-0.5 ${styles[variant]}`}>
+      {children}
+    </span>
+  );
+}
+
+function SectionTag({ children }) {
+  return (
+    <p className="text-[0.65rem] tracking-[2px] uppercase text-blue-400 mb-2">{children}</p>
+  );
+}
+
+function Table({ headers, rows }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm border-collapse">
+        <thead>
+          <tr>
+            {headers.map((h) => (
+              <th key={h} className="text-left text-[0.7rem] uppercase tracking-wider text-foreground/60 bg-white/5 px-4 py-2 border-b border-border font-normal">
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={i} className="border-b border-border hover:bg-white/[0.02] transition-colors">
+              {row.map((cell, j) => (
+                <td key={j} className="px-4 py-3 text-foreground/60 align-top text-sm" dangerouslySetInnerHTML={{ __html: cell }} />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function CheckTable({ rows }) {
+  return (
+    <Table
+      headers={["Critère", "État", "Observation"]}
+      rows={rows.map(([c, ok, obs]) => [
+        `<span class="text-foreground/80">${c}</span>`,
+        ok
+          ? `<span class="text-green-400">✅ Conforme</span>`
+          : `<span class="text-amber-400">⚠️ Delta</span>`,
+        obs,
+      ])}
+    />
+  );
+}
+
+function InvariantRow({ id, title, held, desc }) {
+  return (
+    <li className="flex gap-3 py-3 border-b border-border last:border-0">
+      <span className="shrink-0 mt-0.5 text-[0.7rem] font-bold text-blue-400 bg-white/5 px-2 py-0.5 h-fit">{id}</span>
+      <div>
+        <div className="flex items-center gap-2 mb-0.5">
+          <span className="text-sm text-foreground/80">{title}</span>
+          <Pill variant={held ? "green" : "red"}>{held ? "HELD" : "VIOLATED"}</Pill>
+        </div>
+        <p className="text-xs text-foreground/50">{desc}</p>
+      </div>
+    </li>
+  );
+}
+
+function DiffViewer({ filename, lines }) {
+  return (
+    <div className="bg-[#0d1117] border border-border text-[0.8rem] overflow-x-auto font-mono">
+      <div className="bg-[#1c2128] px-4 py-2 border-b border-border text-foreground/40 text-xs flex items-center gap-2">
+        <span className="text-foreground/30">📄</span> {filename}
+      </div>
+      <div>
+        {lines.map((l, i) => (
+          <div
+            key={i}
+            className={`flex gap-3 px-4 py-0.5 ${
+              l.type === "add" ? "bg-green-900/10 text-green-400" :
+              l.type === "rem" ? "bg-red-900/10 text-red-400" :
+              "text-foreground/40"
+            }`}
+          >
+            <span className="select-none text-[0.7rem] w-4 shrink-0 text-foreground/20">
+              {l.type === "add" ? "+" : l.type === "rem" ? "-" : " "}
+            </span>
+            <span>{l.code}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Page ─────────────────────────────────────────────────────────────────────
+
+export default function SlimePage() {
+  const [activeSection, setActiveSection] = useState("");
+
+  const sections = [
+    { id: "overview",     label: "Vue d'ensemble" },
+    { id: "architecture", label: "Architecture" },
+    { id: "audit",        label: "Audit Manus" },
+    { id: "review",       label: "Revue Claude & GPT" },
+    { id: "patch",        label: "Patch v0.1" },
+    { id: "specs",        label: "Spécifications" },
+  ];
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) setActiveSection(e.target.id); });
+      },
+      { threshold: 0.3 }
+    );
+    sections.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+
+      {/* ── Sticky nav ── */}
+      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
+        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors text-sm">
+              <ArrowLeft className="h-3.5 w-3.5" />
+              SYF Corp
+            </Link>
+            <span className="text-border">|</span>
+            <span className="font-bold text-sm tracking-tight">SLIME</span>
+            <Pill>v0.1</Pill>
+          </div>
+          <div className="hidden md:flex items-center gap-5">
+            {sections.map((s) => (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className={`text-xs transition-colors ${activeSection === s.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
+          <a
+            href="https://github.com/AnathemaOfficial/SLIME"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            GitHub <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+      </nav>
+
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden border-b border-border">
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: "linear-gradient(rgba(0,102,204,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,102,204,.5) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+        <div className="relative max-w-5xl mx-auto px-4 py-20">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <div className="inline-block text-[0.65rem] tracking-[3px] uppercase text-blue-400 border border-blue-900/50 px-3 py-1 mb-6">
+              CANON / SEALED &nbsp;·&nbsp; v0.1
+            </div>
+            <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-tight mb-4">
+              Systemic Law<br />
+              <span className="text-blue-400">Invariant Machine</span><br />
+              Environment
+            </h1>
+            <p className="text-muted-foreground text-base max-w-xl mb-8 leading-relaxed">
+              Un environnement d'exécution scellé qui enforces des limites d'actions non-négociables.
+              Pas un firewall. Pas un policy engine. Une loi structurelle.
+            </p>
+            <div className="inline-block font-mono text-xl text-blue-400 bg-white/5 border border-blue-900/40 px-5 py-3 mb-8">
+              S : A &nbsp;→&nbsp; E &nbsp;∪&nbsp; &#123;∅&#125;
+            </div>
+            <div className="flex flex-wrap gap-6 text-center">
+              {[["32", "bytes — ABI fixe"], ["2", "états possibles"], ["0", "retry / fallback"], ["5", "invariants AVP"]].map(([v, l]) => (
+                <div key={l}>
+                  <div className="text-2xl font-bold text-blue-400">{v}</div>
+                  <div className="text-[0.7rem] uppercase tracking-wider text-muted-foreground">{l}</div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="max-w-4xl mx-auto px-4 py-16 flex flex-col gap-20">
+
+        {/* ── Overview ── */}
+        <section id="overview">
+          <SectionTag>Fondamentaux</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Ce que SLIME est. Ce qu'il n'est pas.</h2>
+          <p className="text-muted-foreground text-sm mb-8 max-w-xl">
+            SLIME ne décide pas. Il ne guide pas. Il retire la représentabilité de certains effets.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            {[
+              { icon: "⚡", t: "Impossibilité Structurelle", b: "Si SLIME n'émet pas de signal, l'actuator ne peut pas agir. L'absence d'autorisation n'est pas une erreur — c'est un état terminal. Pas de troisième état." },
+              { icon: "🔒", t: "Loi Scellée à la Compilation", b: "L'invariant I est non-configurable, non-adaptatif, non-interprétable à l'exécution. Modifier la loi exige une recompilation complète. Zéro configuration drift." },
+              { icon: "⚙️", t: "Séparation Décision / Exécution", b: "SLIME décide si l'effet peut exister. L'actuator exécute mécaniquement. Il ne ré-autorise jamais. Le signal est l'autorisation." },
+              { icon: "🔇", t: "Zéro Feedback Sémantique", b: "Aucun code de raison. Aucune explication. Aucun signal d'apprentissage. Le non-événement est silencieux par construction, pas par politique." },
+            ].map(({ icon, t, b }) => (
+              <div key={t} className="border border-border bg-card p-5 hover:border-border/80 transition-colors">
+                <div className="text-xl mb-3">{icon}</div>
+                <h3 className="text-sm font-semibold text-foreground mb-2">{t}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{b}</p>
+              </div>
+            ))}
+          </div>
+          <div className="border-l-2 border-blue-700 pl-5 py-2 bg-blue-900/5 border border-blue-900/20">
+            <p className="text-[0.7rem] uppercase tracking-widest text-muted-foreground mb-1">Énoncé Canonique</p>
+            <p className="text-sm text-foreground/70 leading-relaxed">
+              SLIME applique une loi qui ne peut être négociée.<br />
+              Il n'expose aucun contrôle, n'offre aucune explication, et ne permet aucune exception.<br />
+              Ce qui passe par SLIME est physiquement autorisé — tout le reste n'existe pas.
+            </p>
+          </div>
+        </section>
+
+        {/* ── Architecture ── */}
+        <section id="architecture">
+          <SectionTag>Architecture</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">4 Modules Fixes. Rien d'autre.</h2>
+          <p className="text-muted-foreground text-sm mb-8 max-w-xl">
+            SLIME v0 est composé de quatre modules avec zéro extensibilité interne.
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            {/* Flux */}
+            <div className="border border-border bg-card p-5">
+              <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground mb-4">Flux d'exécution</p>
+              <div className="flex flex-col items-center gap-0 font-mono text-xs">
+                {[
+                  { label: "🏢 Système Existant", sub: "Backend / Agent IA / Script", hl: false },
+                  null,
+                  { label: "📡 Ingress", sub: "HTTP 127.0.0.1:8080 · POST /action", hl: true },
+                  null,
+                  { label: "🧠 AB-S Core", sub: "Invariant Engine · sealed", hl: true, gold: true },
+                  null,
+                  { label: "🔌 Egress", sub: "/run/slime/egress.sock · 32 bytes", hl: true },
+                  null,
+                  { label: "⚙️ Actuator", sub: "Exécution mécanique · zéro auth", hl: false },
+                  null,
+                  { label: "🌍 Effet réel  —  ou  ∅", sub: "", hl: false },
+                ].map((item, i) =>
+                  item === null ? (
+                    <div key={i} className="text-blue-500 text-base leading-none py-0.5">↓</div>
+                  ) : (
+                    <div
+                      key={i}
+                      className={`w-full px-3 py-2 border text-center ${
+                        item.gold
+                          ? "border-amber-700/50 bg-amber-900/10"
+                          : item.hl
+                          ? "border-blue-800/50 bg-blue-900/10"
+                          : "border-border bg-background"
+                      }`}
+                    >
+                      <div className={`font-semibold ${item.gold ? "text-amber-300" : item.hl ? "text-blue-300" : "text-foreground/60"}`}>
+                        {item.label}
+                      </div>
+                      {item.sub && <div className="text-[0.65rem] text-muted-foreground mt-0.5">{item.sub}</div>}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+
+            {/* ABI + Fail-closed */}
+            <div className="flex flex-col gap-4">
+              <div className="border border-border bg-card p-5">
+                <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground mb-3">ABI Egress — 32 bytes LE</p>
+                <Table
+                  headers={["Offset", "Type", "Champ", "Notes"]}
+                  rows={[
+                    ["<code class='text-blue-400'>0–7</code>", "<code>u64</code>", "domain_id", "Scellé à la compilation"],
+                    ["<code class='text-blue-400'>8–15</code>", "<code>u64</code>", "magnitude", "Seul scalaire transporté"],
+                    ["<code class='text-blue-400'>16–31</code>", "<code>u128</code>", "actuation_token", "Opaque, déterministe"],
+                  ]}
+                />
+              </div>
+              <div className="border border-border bg-card p-5">
+                <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground mb-3">Garanties Fail-Closed</p>
+                <Table
+                  headers={["Condition", "Résultat"]}
+                  rows={[
+                    ["Socket absente au boot", "<code>exit(1)</code> immédiat"],
+                    ["Écriture egress échouée", "Non-événement (∅)"],
+                    ["Payload ingress invalide", "Non-événement (∅)"],
+                    ["Crash SLIME", "Socket fermée → Actuator muet"],
+                    ["Mode dégradé", "<span class='text-red-400'>Inexistant</span>"],
+                  ]}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Audit Manus ── */}
+        <section id="audit">
+          <SectionTag>Audit de Conformité</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Rapport d'Audit — Manus AI</h2>
+          <p className="text-muted-foreground text-sm mb-6 max-w-xl">
+            Audit adversarial complet du prototype SLIME v0 sur implémentation Rust réelle.
+          </p>
+
+          <div className="flex flex-wrap gap-2 mb-6">
+            <Pill>Manus AI · Auteur</Pill>
+            <Pill>2 mars 2026</Pill>
+            <Pill variant="green">✓ Prototype CONFORME v0</Pill>
+          </div>
+
+          <div className="flex items-center gap-3 bg-green-900/10 border border-green-800/30 px-4 py-3 mb-8">
+            <span className="text-xl">✅</span>
+            <div>
+              <div className="text-sm font-bold text-green-400">PROTOTYPE v0 — CONFORME AU CANON</div>
+              <div className="text-xs text-muted-foreground">Tous les invariants AVP-v1 validés sous conditions adversariales locales</div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div>
+              <h3 className="text-xs uppercase tracking-widest text-foreground/50 mb-3">3.1 Implémentation Actuator</h3>
+              <CheckTable rows={[
+                ["Pure Exécution", true, "Zéro logique d'autorisation interne. Le signal est l'autorisation."],
+                ["Lecture Binaire Stricte", true, "<code>read_exact(32)</code> en boucle STREAM jusqu'à EOF."],
+                ["Décodage ABI", true, "Décodage <code>u64</code> et <code>u128</code> en Little-Endian strict."],
+                ["Journalisation Preuve-Only", true, "JSON minimal : <code>ts</code> (u64 brut), <code>domain_id</code>, <code>magnitude</code>, <code>status: EXEC_OK</code>."],
+              ]} />
+            </div>
+            <div>
+              <h3 className="text-xs uppercase tracking-widest text-foreground/50 mb-3">3.2 Sécurité Socket Unix</h3>
+              <CheckTable rows={[
+                ["Ownership", true, "Actuator crée et possède <code>/run/slime/egress.sock</code>."],
+                ["Permissions", true, "Permissions <code>0660</code> · v0.1 : groupe dédié <code>slime-egress</code>."],
+                ["Ordre de Démarrage", true, "Actuator → SLIME · systemd <code>Requires=</code> validé au reboot."],
+              ]} />
+            </div>
+            <div>
+              <h3 className="text-xs uppercase tracking-widest text-foreground/50 mb-3">3.3 Fail-Closed & Frames Invalides</h3>
+              <CheckTable rows={[
+                ["Fail-Closed", true, "SLIME échoue immédiatement si socket absente."],
+                ["Frames Invalides", true, "Frame 31 bytes → drop silencieux. <code>grep -Ei \"(invalide|error|partial)\"</code> → vide."],
+              ]} />
+            </div>
+            <div>
+              <h3 className="text-xs uppercase tracking-widest text-foreground/50 mb-3">Invariants AVP-v1</h3>
+              <ul className="divide-y divide-border border border-border">
+                <InvariantRow id="I1" held title="Binary Verdict Invariant" desc="SLIME émet uniquement AUTHORIZED ou IMPOSSIBLE. Pas de troisième état." />
+                <InvariantRow id="I2" held title="Fixed Egress ABI Invariant" desc="Tous les événements egress font exactement 32 bytes. Aucun framing, JSON ou métadonnée." />
+                <InvariantRow id="I3" held title="Fail-Closed Boot Invariant" desc="Si le propriétaire de la socket est absent, SLIME refuse de démarrer. Aucun mode dégradé." />
+                <InvariantRow id="I4" held title="No Reason-Code Invariant" desc="SLIME n'émet jamais d'explications, codes ou labels sémantiques." />
+                <InvariantRow id="I5" held title="Unidirectional Egress Invariant" desc="L'egress est write-only depuis SLIME vers l'actuator. Aucun canal bidirectionnel." />
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* ── AI Review ── */}
+        <section id="review">
+          <SectionTag>Revue Multi-Agents</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Analyse Claude & GPT-4</h2>
+          <p className="text-muted-foreground text-sm mb-8 max-w-xl">
+            Analyse indépendante du prototype v0 et du rapport Manus par les deux modèles.
+          </p>
+
+          {/* Claude */}
+          <div className="border border-border bg-card mb-4 overflow-hidden">
+            <div className="flex items-center gap-3 px-5 py-3 bg-white/[0.03] border-b border-border">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-600 to-orange-600 flex items-center justify-center text-white font-bold shrink-0">C</div>
+              <div>
+                <div className="text-sm font-semibold text-foreground">Claude (Anthropic)</div>
+                <div className="text-xs text-muted-foreground">Analyse complète · Code Rust · Rapport Manus</div>
+              </div>
+              <Pill variant="gold" className="ml-auto">Analyse Technique</Pill>
+            </div>
+            <div className="p-5 flex flex-col gap-4">
+              <div className="bg-green-900/10 border border-green-800/30 px-4 py-3 text-sm">
+                <span className="text-green-400 font-bold block mb-1">Verdict Global</span>
+                <span className="text-foreground/70">"Prototype v0 : CONFORME. Les deux rapports d'audit sont cohérents et honnêtes. Manus a même identifié ses propres lacunes dans les recommandations v0.1, ce qui est un bon signe de rigueur."</span>
+              </div>
+              <p className="text-sm text-foreground/80 font-semibold">Trois deltas identifiés pour v0.1</p>
+              <div className="flex flex-col divide-y divide-border border border-border">
+                {[
+                  ["1", "chrono → SystemTime u64", "chrono produit des timestamps lisibles humainement — sémantique dans un log qui doit être de la preuve brute. Remplacer par SystemTime::now().duration_since(UNIX_EPOCH).as_secs() en u64. Plus déterministe, moins de surface, zéro dépendance externe."],
+                  ["2", "Gap spec/code — frames > 32 bytes", "ACTUATOR_V0_CANON.md §5 dit \"> 32 bytes → tranches de 32\". Mais read_exact(32) seul ne boucle pas. La spec et le code divergent. Fix : boucle read_exact(32) jusqu'à EOF."],
+                  ["3", "actuation_token hardcodé dans le simulateur", "Normal pour prototype, mais en v0.1 ce token doit être généré par AB-S Core. C'est le seul point où la séparation décision/exécution est simulée. Recadrer le simulateur comme NONCANON / TEST HARNESS."],
+                ].map(([num, title, body]) => (
+                  <div key={num} className="flex gap-3 p-4">
+                    <div className="shrink-0 h-7 w-7 bg-blue-900/40 text-blue-300 text-xs font-bold flex items-center justify-center">{num}</div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground/80 mb-1">{title}</div>
+                      <div className="text-xs text-muted-foreground leading-relaxed">{body}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* GPT */}
+          <div className="border border-border bg-card mb-6 overflow-hidden">
+            <div className="flex items-center gap-3 px-5 py-3 bg-white/[0.03] border-b border-border">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-white font-bold shrink-0">G</div>
+              <div>
+                <div className="text-sm font-semibold text-foreground">GPT-4 (OpenAI)</div>
+                <div className="text-xs text-muted-foreground">Lecture canon froide · Plan d'action v0.1 · Option B validée</div>
+              </div>
+              <Pill className="ml-auto">Plan d'Action</Pill>
+            </div>
+            <div className="p-5 flex flex-col gap-4">
+              <div className="bg-blue-900/10 border border-blue-800/30 px-4 py-3 text-sm">
+                <span className="text-blue-300 font-bold block mb-1">Confirmation Claude #2 comme canon-critical</span>
+                <span className="text-foreground/70">"Le doc dit explicitement : &lt;32 → drop silencieux et &gt;32 → tranches de 32. Si le code fait '1 frame puis close', la phrase 'tranches de 32' n'est pas tenue."</span>
+              </div>
+              <p className="text-sm text-foreground/80 font-semibold">Précision technique : as_nanos() vs as_secs()</p>
+              <DiffViewer filename="Précision GPT" lines={[
+                { type: "rem", code: "as_nanos() → retourne u128 → cast en u64 tronque" },
+                { type: "add", code: "as_secs() → u64 direct, sans troncature" },
+                { type: "ctx", code: "// Ou as_millis() as u64 selon la précision souhaitée" },
+              ]} />
+              <p className="text-sm text-foreground/80 font-semibold">Plan Patch v0.1 — Option B retenue</p>
+              <div className="flex flex-col divide-y divide-border border border-border">
+                {[
+                  ["A", "Actuator", "Remplacer chrono → SystemTime u64 secs. Garder uniquement logs EXEC_OK/EXEC_FAIL. Boucle read_exact(32) jusqu'à EOF. Frames invalides → silence total."],
+                  ["B", "Docs", "ACTUATOR_V0_CANON.md : confirmer 'tranches de 32' = boucle read_exact(32) jusqu'à EOF. Rapport d'audit : 1 phrase alignée."],
+                  ["C", "Simulateur", "Marquer NONCANON / TEST HARNESS ONLY. Token hardcodé → commentaire 'TEST ONLY'. Frame invalide (31 bytes) sur connexion séparée."],
+                ].map(([num, title, body]) => (
+                  <div key={num} className="flex gap-3 p-4">
+                    <div className="shrink-0 h-7 w-7 bg-blue-900/40 text-blue-300 text-xs font-bold flex items-center justify-center">{num}</div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground/80 mb-1">{title}</div>
+                      <div className="text-xs text-muted-foreground leading-relaxed">{body}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="bg-white/[0.03] border border-border p-4 border-l-2 border-l-green-600">
+                <p className="text-green-400 text-xs font-bold mb-2">Micro-check avant commit</p>
+                <pre className="text-xs text-muted-foreground font-mono leading-relaxed">{`cargo build --release
+./test_slime.sh
+
+# Attendu :
+✓ Pas de logs "invalid/partial/error"
+✓ Au moins 1 ligne {"status":"EXEC_OK"}
+✓ Socket perms 0660 + group slime-egress`}</pre>
+              </div>
+            </div>
+          </div>
+
+          {/* Convergence */}
+          <div className="border border-border bg-card p-5">
+            <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground mb-4">Convergence des deux analyses</p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <p className="text-green-400 text-xs font-bold mb-2">✓ Points d'accord</p>
+                <ul className="text-xs text-muted-foreground space-y-1.5">
+                  {["chrono → u64 brut", "Boucle read_exact(32) = fix canon", "Simulateur doit être NONCANON", "slime-egress group = bonne recommandation", "Prototype fonctionnellement solide"].map(p => (
+                    <li key={p} className="flex items-start gap-1.5"><span className="text-foreground/30 shrink-0">→</span>{p}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-blue-400 text-xs font-bold mb-2">+ Précision GPT additionnelle</p>
+                <ul className="text-xs text-muted-foreground space-y-1.5">
+                  {["as_nanos() → u128, prendre as_secs() → u64", "Frame invalide sur connexion séparée", "test_slime.sh : grep silence logs non-canoniques", "Option B = seul choix propre"].map(p => (
+                    <li key={p} className="flex items-start gap-1.5"><span className="text-foreground/30 shrink-0">→</span>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Patch ── */}
+        <section id="patch">
+          <SectionTag>Patch v0.1</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">patch_v0_1.diff</h2>
+          <p className="text-muted-foreground text-sm mb-6 max-w-xl">
+            Appliqué via <code className="text-blue-400">git apply patch_v0_1.diff</code>. Zéro changement de loi, uniquement durcissement.
+          </p>
+          <div className="flex flex-wrap gap-2 mb-6">
+            <Pill variant="green">+97 lignes</Pill>
+            <Pill variant="red">-90 lignes</Pill>
+            <Pill>5 fichiers modifiés</Pill>
+            <Pill variant="gold">Zéro changement de loi</Pill>
+          </div>
+
+          <div className="flex flex-col gap-5">
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-widest text-foreground/40 mb-2">actuator/src/main.rs — Changements clés</p>
+              <DiffViewer filename="actuator/src/main.rs · Option B applied" lines={[
+                { type: "rem", code: "extern crate chrono;" },
+                { type: "add", code: "use std::time::{SystemTime, UNIX_EPOCH};" },
+                { type: "ctx", code: "" },
+                { type: "add", code: "fn unix_epoch_secs_u64() -> u64 {" },
+                { type: "add", code: "    SystemTime::now()" },
+                { type: "add", code: "        .duration_since(UNIX_EPOCH)" },
+                { type: "add", code: "        .map(|d| d.as_secs()).unwrap_or(0)" },
+                { type: "add", code: "}" },
+                { type: "ctx", code: "" },
+                { type: "add", code: "loop {  // STREAM framing: read_exact(32) until EOF" },
+                { type: "add", code: "    if let Err(e) = stream.read_exact(&mut buf) {" },
+                { type: "add", code: "        if e.kind() == ErrorKind::UnexpectedEof { break; }" },
+                { type: "add", code: "        break; // Drop silently — no log" },
+                { type: "add", code: "    }" },
+                { type: "rem", code: '// Old: println!("Actuator: {{ \\"ts\\": \\"{}\\", ... }}", chrono::Utc::now()...);' },
+                { type: "add", code: 'println!("{{\\"ts\\":{},\\"domain_id\\":{},\\"status\\":\\"EXEC_OK\\"}}", ts, domain_id);' },
+              ]} />
+            </div>
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-widest text-foreground/40 mb-2">Cargo.toml — Suppression chrono</p>
+              <DiffViewer filename="Cargo.toml" lines={[
+                { type: "ctx", code: "[dependencies]" },
+                { type: "rem", code: 'chrono = "0.4"' },
+                { type: "add", code: "# No external dependencies — stdlib only" },
+              ]} />
+            </div>
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-widest text-foreground/40 mb-2">simulator/src/main.rs — Recadrage NONCANON</p>
+              <DiffViewer filename="slime_simulator/src/main.rs" lines={[
+                { type: "add", code: "//! SLIME Simulator (TEST HARNESS ONLY)" },
+                { type: "add", code: "//! NONCANONICAL by design." },
+                { type: "add", code: "//! actuation_token here is a PLACEHOLDER — generated by AB-S in real system." },
+                { type: "ctx", code: "" },
+                { type: "add", code: "// 2) Invalid frame (31 bytes) on SEPARATE connection" },
+                { type: "add", code: "let mut bad = UnixStream::connect(SOCKET_PATH)?;" },
+                { type: "add", code: "bad.write_all(&[0u8; 31])?;" },
+              ]} />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Specs ── */}
+        <section id="specs">
+          <SectionTag>Spécifications Techniques</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Référence v0.1</h2>
+          <p className="text-muted-foreground text-sm mb-8 max-w-xl">
+            Ce qui change entre v0 et v0.1 est exclusivement du durcissement — aucun changement de loi.
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-5">
+              {[
+                {
+                  title: "Identité",
+                  rows: [
+                    ["Nom complet", "Systemic Law Invariant Machine Environment"],
+                    ["Version", "v0.1 (durcissement · loi inchangée)"],
+                    ["Statut", "CANON / SEALED"],
+                    ["Stack", "Rust 60% · Shell 18% · HTML 15% · Python 7%"],
+                    ["Repo", '<a href="https://github.com/AnathemaOfficial/SLIME" class="text-blue-400 underline" target="_blank">github.com/AnathemaOfficial/SLIME ↗</a>'],
+                  ],
+                },
+                {
+                  title: "Ingress API",
+                  rows: [
+                    ["Endpoint", "<code>POST /action</code>"],
+                    ["Bind", "<code>127.0.0.1:8080</code> (non-configurable)"],
+                    ["Format", "JSON · <code>domain</code>, <code>magnitude</code>, <code>payload?</code>"],
+                    ["Réponse OK", '<code>{"status":"AUTHORIZED","effect_id":"…"}</code>'],
+                    ["Réponse ∅", '<code>{"status":"IMPOSSIBLE"}</code>'],
+                    ["Rate limit", "Aucun — saturation → IMPOSSIBLE"],
+                  ],
+                },
+              ].map(({ title, rows }) => (
+                <div key={title} className="border border-border bg-card p-5">
+                  <p className="text-[0.7rem] uppercase tracking-widest text-blue-400 mb-3">{title}</p>
+                  <dl className="flex flex-col gap-1.5">
+                    {rows.map(([k, v]) => (
+                      <div key={k} className="grid grid-cols-[140px_1fr] gap-2 text-xs">
+                        <dt className="text-muted-foreground">{k}</dt>
+                        <dd className="text-foreground/70" dangerouslySetInnerHTML={{ __html: v }} />
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-5">
+              <div className="border border-border bg-card p-5">
+                <p className="text-[0.7rem] uppercase tracking-widest text-blue-400 mb-3">Deltas v0 → v0.1</p>
+                <Table
+                  headers={["Élément", "v0", "v0.1"]}
+                  rows={[
+                    ["Timestamp", "<code>chrono rfc3339</code>", "<code>u64 as_secs()</code>"],
+                    ["Framing", "1 frame / connexion", "Boucle STREAM EOF"],
+                    ["Simulateur", "Ambigu", "NONCANON explicite"],
+                    ["Groupe socket", "Générique", "<code>slime-egress</code>"],
+                    ["Frames invalides", "Log explicatif", "Silence total"],
+                    ["Dep. chrono", "Présente", "Supprimée"],
+                  ]}
+                />
+              </div>
+              <div className="border border-border bg-card p-5">
+                <p className="text-[0.7rem] uppercase tracking-widest text-blue-400 mb-3">Definition of Done — v0.1</p>
+                <ul className="divide-y divide-border">
+                  {[
+                    ["T1", "Frame 31 bytes → drop silencieux, zéro log"],
+                    ["T2", "Frame 33 bytes → boucle read_exact correcte"],
+                    ["T3", "Partial read → drop silencieux"],
+                    ["T4", "domain_id inconnu → noop (∅)"],
+                    ["T5", "Socket 0660 + group slime-egress validés"],
+                    ["T6", "Boot ordering validé après reboot"],
+                  ].map(([id, text]) => (
+                    <li key={id} className="flex gap-3 items-center py-2 text-xs">
+                      <span className="text-[0.65rem] font-bold text-blue-400 bg-white/5 px-1.5 py-0.5 shrink-0">{id}</span>
+                      <span className="text-foreground/60">{text}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      {/* ── Footer ── */}
+      <footer className="border-t border-border bg-card mt-4">
+        <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs text-muted-foreground">
+          <div>
+            <div className="font-mono text-foreground/60 mb-1">SLIME v0.1 — Systemic Law Invariant Machine Environment</div>
+            <div>Prototype audité par Manus AI · Analysé par Claude &amp; GPT-4 · © 2026 AnathemaOfficial</div>
+          </div>
+          <Link to="/" className="hover:text-foreground transition-colors flex items-center gap-1">
+            <ArrowLeft className="h-3 w-3" /> syfcorp.com
+          </Link>
+        </div>
+      </footer>
+    </div>
+  );
+}
