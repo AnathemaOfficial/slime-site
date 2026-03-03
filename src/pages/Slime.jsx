@@ -551,7 +551,7 @@ export default function SlimePage() {
           <SectionTag>{tx.archTag}</SectionTag>
           <h2 className="text-2xl font-bold text-foreground mb-2">{tx.archTitle}</h2>
           <p className="text-muted-foreground text-sm mb-8 max-w-xl">{tx.archSub}</p>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="border border-border bg-card p-5">
               <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground mb-4">{tx.archFlowLabel}</p>
               <div className="flex flex-col items-center gap-0 font-mono text-xs">
@@ -780,7 +780,7 @@ export default function SlimePage() {
           <SectionTag>{tx.specsTag}</SectionTag>
           <h2 className="text-2xl font-bold text-foreground mb-2">{tx.specsTitle}</h2>
           <p className="text-muted-foreground text-sm mb-8 max-w-xl">{tx.specsSub}</p>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="flex flex-col gap-5">
               {[
                 { label: tx.identityLabel, rows: tx.identityRows },
