@@ -148,7 +148,7 @@ export default function SyfcorpHomepage() {
                 <div className="h-8 w-8 rounded-lg border border-border bg-foreground/5 flex items-center justify-center">
                   <span className="text-xs font-bold text-foreground/60">S</span>
                 </div>
-                <span className="text-sm uppercase tracking-[0.18em] text-muted-foreground">
+                <span className="text-sm tracking-wide text-muted-foreground">
                   SYF Corp
                 </span>
               </div>
