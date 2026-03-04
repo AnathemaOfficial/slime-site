@@ -24,7 +24,7 @@ const t = {
     heroTag: "CANON / SEALED",
     heroTitle: ["Systemic Law", "Invariant Machine", "Environment"],
     heroAccent: 1,
-    heroSub: "A sealed execution membrane that enforces structural action limits. SLIME does not interpret policies and does not evaluate permissions. It only materializes the outcome of a structural law.",
+    heroSub: "A sealed execution membrane that enforces structural action limits. SLIME does not interpret policies and does not evaluate permissions. It only materializes the outcome of a structural law. Security emerges from the structure itself, not from dynamic policy interpretation.",
     stats: [["32","bytes — fixed ABI"],["2","possible states"],["0","retry / fallback"],["5","AVP invariants"]],
 
     overviewTag: "Fundamentals",
@@ -119,7 +119,7 @@ const t = {
       "Side-channel leakage outside the SLIME boundary",
     ],
     threatAssumptionTitle: "Security assumption",
-    threatAssumption: "The actuator and the SLIME host are assumed to be under operator control. SLIME enforces authorization structure, not system integrity.",
+    threatAssumption: "The actuator and the SLIME host are assumed to be under operator control. SLIME enforces authorization structure, not host integrity.",
 
     auditTag: "Conformity Audit",
     auditTitle: "Audit Report — Manus AI",
@@ -305,6 +305,7 @@ const t = {
       ["Endpoint", "<code>POST /action</code>"],
       ["Bind", "<code>127.0.0.1:8080</code> (non-configurable)"],
       ["Format", "JSON · <code>domain</code>, <code>magnitude</code>, <code>payload?</code>"],
+      ["Domain mapping", "Ingress strings are mapped to sealed <code>domain_id</code> (<code>u64</code>) at compile time. SLIME and AB-S operate only on <code>u64</code> identifiers."],
       ["Response OK", '<code>{"status":"AUTHORIZED"}</code>'],
       ["Response ∅", '<code>{"status":"IMPOSSIBLE"}</code>'],
       ["Rate limit", "None — saturation → IMPOSSIBLE"],
@@ -356,7 +357,7 @@ const t = {
     heroTag: "CANON / SEALED",
     heroTitle: ["Systemic Law", "Invariant Machine", "Environment"],
     heroAccent: 1,
-    heroSub: "Une membrane d'exécution scellée qui enforce des limites d'actions structurelles. SLIME n'interprète pas de politiques et n'évalue pas de permissions. Il matérialise uniquement le résultat d'une loi structurelle.",
+    heroSub: "Une membrane d'exécution scellée qui enforce des limites d'actions structurelles. SLIME n'interprète pas de politiques et n'évalue pas de permissions. Il matérialise uniquement le résultat d'une loi structurelle. La sécurité émerge de la structure elle-même, pas de l'interprétation dynamique de politiques.",
     stats: [["32","bytes — ABI fixe"],["2","états possibles"],["0","retry / fallback"],["5","invariants AVP"]],
 
     overviewTag: "Fondamentaux",
@@ -451,7 +452,7 @@ const t = {
       "Fuites par canaux auxiliaires hors de la frontière SLIME",
     ],
     threatAssumptionTitle: "Hypothèse de sécurité",
-    threatAssumption: "L'actuator et l'hôte SLIME sont supposés sous contrôle de l'opérateur. SLIME enforce la structure d'autorisation, pas l'intégrité système.",
+    threatAssumption: "L'actuator et l'hôte SLIME sont supposés sous contrôle de l'opérateur. SLIME enforce la structure d'autorisation, pas l'intégrité de l'hôte.",
 
     auditTag: "Audit de Conformité",
     auditTitle: "Rapport d'Audit — Manus AI",
@@ -637,6 +638,7 @@ const t = {
       ["Endpoint", "<code>POST /action</code>"],
       ["Bind", "<code>127.0.0.1:8080</code> (non-configurable)"],
       ["Format", "JSON · <code>domain</code>, <code>magnitude</code>, <code>payload?</code>"],
+      ["Mapping domaine", "Les chaînes ingress sont mappées vers des <code>domain_id</code> (<code>u64</code>) scellés à la compilation. SLIME et AB-S opèrent uniquement sur des identifiants <code>u64</code>."],
       ["Réponse OK", '<code>{"status":"AUTHORIZED"}</code>'],
       ["Réponse ∅", '<code>{"status":"IMPOSSIBLE"}</code>'],
       ["Rate limit", "Aucun — saturation → IMPOSSIBLE"],
