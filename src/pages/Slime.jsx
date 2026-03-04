@@ -15,6 +15,7 @@ const t = {
       { id: "threats",      label: "Threat Model" },
       { id: "audit",        label: "Audit" },
       { id: "review",       label: "AI Review" },
+      { id: "symbiote",     label: "Symbiote" },
       { id: "patch",        label: "Patch v0.1" },
       { id: "conformance",  label: "Conformance" },
       { id: "security",     label: "Security" },
@@ -200,6 +201,47 @@ const t = {
     convergenceGpt: "+ Additional GPT precision",
     convergenceGptList: ["as_nanos() → u128, use as_secs() → u64", "Invalid frame on separate connection", "test_slime.sh: grep silence non-canonical logs", "Option B = only clean choice"],
 
+    symbioteTag: "Structural Audit",
+    symbioteTitle: "SYMBIOTE Structural Audit",
+    symbioteSub: "An external structural review of the SYF stack was conducted to evaluate whether the architecture actually enforces its stated invariants.",
+    symbiotePills: ["Symbiote · Author", "March 2026", "SYF Full-Stack", "Structural Analysis"],
+    symbioteSubtitle: "Full-stack structural analysis · Gate / Shield / AB / SLIME",
+    symbioteScope: "The audit focused on the interaction between the four execution layers rather than reviewing policies or runtime behavior. The analysis examined the structural properties of the system.",
+    symbioteKeyFindingTitle: "Key Finding — Monotone Capability System",
+    symbioteKeyFinding: "The stack behaves as a monotone capability system. Each transition in the pipeline reduces the set of possible actions. No component in the stack can increase capability once the process begins.",
+    symbioteFormula: "possible_actions(t+1) ⊆ possible_actions(t)",
+    symbiotePreventsTitle: "This prevents:",
+    symbiotePreventsList: [
+      "Privilege escalation",
+      "Cumulative permission amplification",
+      "Adaptive probing through repeated attempts",
+      "Policy reinterpretation during execution",
+    ],
+    symbioteCaption: "Security therefore emerges from capacity reduction, not rule interpretation.",
+    symbioteBinaryTitle: "Binary Execution Boundary",
+    symbioteBinaryDesc: "The final boundary is enforced by SLIME. SLIME does not evaluate policies and does not reinterpret decisions. It only materializes the output of the stack.",
+    symbioteBinaryStates: ["AUTHORIZED → 32-byte frame emitted → actuator executes", "IMPOSSIBLE → no frame → actuator remains silent"],
+    symbioteBinaryConclusion: "There is no third state and no semantic feedback channel. This removes the possibility of authorization oracles.",
+    symbioteSignalTitle: "Deterministic Authorization Signal",
+    symbioteSignalRows: [
+      ["<code class='text-blue-400'>domain_id</code>", "<code>u64</code>"],
+      ["<code class='text-blue-400'>magnitude</code>", "<code>u64</code>"],
+      ["<code class='text-blue-400'>actuation_token</code>", "<code>u128</code>"],
+    ],
+    symbioteSignalCaption: "Total: 32 bytes — No metadata. No JSON. No semantic payload. The signal itself is the authorization.",
+    symbioteAuditTitle: "Audit Implication",
+    symbioteAuditChecks: [
+      "Capability never increases",
+      "The binary membrane is preserved",
+      "The 32-byte ABI is stable",
+      "No semantic feedback reaches agents",
+      "The actuator executes only when a signal exists",
+    ],
+    symbioteAuditConclusion: "Once these properties hold, entire classes of exploits become structurally impossible.",
+    symbioteBoundaryTitle: "Integration Boundary",
+    symbioteBoundary: "The remaining theoretical risk lies outside the formal model: unmodeled environmental effects or poorly defined actuation primitives. These must be controlled at the actuator boundary, not within the law layer.",
+    symbioteConclusion: "The SYF stack does not attempt to control behavior through policies. It constrains the space of representable actions. SLIME therefore acts as a structural membrane between decision and effect, enforcing a law-layer execution model where unauthorized actions cannot occur because they cannot be represented.",
+
     conformanceTag: "Full-Stack Conformance",
     conformanceTitle: "Cross-Layer Integration Contract",
     conformanceSub: "Defines the non-overlapping roles and invariant ownership across all SYF components. Each component enforces its own slice — no overlap, no gaps.",
@@ -305,6 +347,7 @@ const t = {
       { id: "threats",      label: "Menaces" },
       { id: "audit",        label: "Audit" },
       { id: "review",       label: "Revue AI" },
+      { id: "symbiote",     label: "Symbiote" },
       { id: "patch",        label: "Patch v0.1" },
       { id: "conformance",  label: "Conformité" },
       { id: "security",     label: "Sécurité" },
@@ -489,6 +532,47 @@ const t = {
     convergenceAgreeList: ["chrono → u64 brut", "Boucle read_exact(32) = fix canon", "Simulateur doit être NONCANON", "slime-egress group = bonne recommandation", "Prototype fonctionnellement solide"],
     convergenceGpt: "+ Précision GPT additionnelle",
     convergenceGptList: ["as_nanos() → u128, prendre as_secs() → u64", "Frame invalide sur connexion séparée", "test_slime.sh : grep silence logs non-canoniques", "Option B = seul choix propre"],
+
+    symbioteTag: "Audit Structurel",
+    symbioteTitle: "Audit Structurel SYMBIOTE",
+    symbioteSub: "Une revue structurelle externe de la stack SYF a été conduite pour évaluer si l'architecture enforce réellement ses invariants déclarés.",
+    symbiotePills: ["Symbiote · Auteur", "Mars 2026", "SYF Full-Stack", "Analyse Structurelle"],
+    symbioteSubtitle: "Analyse structurelle full-stack · Gate / Shield / AB / SLIME",
+    symbioteScope: "L'audit s'est concentré sur l'interaction entre les quatre couches d'exécution plutôt que sur les politiques ou le comportement à l'exécution. L'analyse a examiné les propriétés structurelles du système.",
+    symbioteKeyFindingTitle: "Conclusion clé — Système de Capacité Monotone",
+    symbioteKeyFinding: "La stack se comporte comme un système de capacité monotone. Chaque transition dans le pipeline réduit l'ensemble des actions possibles. Aucun composant de la stack ne peut augmenter la capacité une fois le processus lancé.",
+    symbioteFormula: "possible_actions(t+1) ⊆ possible_actions(t)",
+    symbiotePreventsTitle: "Cela empêche :",
+    symbiotePreventsList: [
+      "L'escalade de privilèges",
+      "L'amplification cumulative de permissions",
+      "Le sondage adaptatif par tentatives répétées",
+      "La réinterprétation de politiques pendant l'exécution",
+    ],
+    symbioteCaption: "La sécurité émerge donc de la réduction de capacité, pas de l'interprétation de règles.",
+    symbioteBinaryTitle: "Frontière d'Exécution Binaire",
+    symbioteBinaryDesc: "La frontière finale est enforcée par SLIME. SLIME n'évalue pas de politiques et ne réinterprète pas les décisions. Il matérialise uniquement la sortie de la stack.",
+    symbioteBinaryStates: ["AUTHORIZED → frame 32 bytes émise → l'actuator exécute", "IMPOSSIBLE → pas de frame → l'actuator reste silencieux"],
+    symbioteBinaryConclusion: "Il n'y a pas de troisième état et aucun canal de feedback sémantique. Cela élimine la possibilité d'oracles d'autorisation.",
+    symbioteSignalTitle: "Signal d'Autorisation Déterministe",
+    symbioteSignalRows: [
+      ["<code class='text-blue-400'>domain_id</code>", "<code>u64</code>"],
+      ["<code class='text-blue-400'>magnitude</code>", "<code>u64</code>"],
+      ["<code class='text-blue-400'>actuation_token</code>", "<code>u128</code>"],
+    ],
+    symbioteSignalCaption: "Total : 32 bytes — Aucune métadonnée. Aucun JSON. Aucun payload sémantique. Le signal lui-même est l'autorisation.",
+    symbioteAuditTitle: "Implication pour l'Audit",
+    symbioteAuditChecks: [
+      "La capacité n'augmente jamais",
+      "La membrane binaire est préservée",
+      "L'ABI 32 bytes est stable",
+      "Aucun feedback sémantique n'atteint les agents",
+      "L'actuator n'exécute que lorsqu'un signal existe",
+    ],
+    symbioteAuditConclusion: "Une fois ces propriétés vérifiées, des classes entières d'exploits deviennent structurellement impossibles.",
+    symbioteBoundaryTitle: "Frontière d'Intégration",
+    symbioteBoundary: "Le risque théorique restant se situe hors du modèle formel : effets environnementaux non modélisés ou primitives d'actuation mal définies. Ceux-ci doivent être contrôlés à la frontière de l'actuator, pas dans la couche de loi.",
+    symbioteConclusion: "La stack SYF ne tente pas de contrôler le comportement par des politiques. Elle contraint l'espace des actions représentables. SLIME agit donc comme une membrane structurelle entre décision et effet, enforçant un modèle d'exécution par couche de loi où les actions non autorisées ne peuvent pas se produire car elles ne peuvent pas être représentées.",
 
     conformanceTag: "Conformité Full-Stack",
     conformanceTitle: "Contrat d'Intégration Inter-Couches",
@@ -1011,6 +1095,112 @@ export default function SlimePage() {
                 <ul className="text-xs text-muted-foreground space-y-1.5">
                   {tx.convergenceGptList.map(p => <li key={p} className="flex items-start gap-1.5"><span className="text-foreground/30 shrink-0">→</span>{p}</li>)}
                 </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── SYMBIOTE Structural Audit ── */}
+        <section id="symbiote">
+          <SectionTag>{tx.symbioteTag}</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{tx.symbioteTitle}</h2>
+          <p className="text-muted-foreground text-sm mb-6 max-w-xl">{tx.symbioteSub}</p>
+          <div className="flex flex-wrap gap-2 mb-6">
+            {tx.symbiotePills.map((p, i) => <Pill key={i} variant={i === 2 ? "gold" : i === 3 ? "green" : "default"}>{p}</Pill>)}
+          </div>
+
+          {/* Header card */}
+          <div className="border border-border bg-card overflow-hidden mb-6">
+            <div className="flex items-center gap-3 px-5 py-3 bg-white/[0.03] border-b border-border">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center text-white font-bold shrink-0">S</div>
+              <div>
+                <div className="text-sm font-semibold text-foreground">Symbiote</div>
+                <div className="text-xs text-muted-foreground">{tx.symbioteSubtitle}</div>
+              </div>
+              <Pill variant="gold" className="ml-auto">Structural</Pill>
+            </div>
+            <div className="p-5 flex flex-col gap-5">
+
+              {/* Scope */}
+              <p className="text-xs text-muted-foreground leading-relaxed">{tx.symbioteScope}</p>
+
+              {/* Key Finding */}
+              <div className="bg-green-900/10 border border-green-800/30 px-4 py-3">
+                <span className="text-green-400 font-bold text-sm block mb-1">{tx.symbioteKeyFindingTitle}</span>
+                <span className="text-foreground/70 text-sm">{tx.symbioteKeyFinding}</span>
+              </div>
+
+              {/* Formula */}
+              <div className="font-mono text-sm text-blue-400 bg-white/5 border border-blue-900/40 px-5 py-3 text-center tracking-wide">
+                {tx.symbioteFormula}
+              </div>
+
+              {/* Prevents */}
+              <div>
+                <p className="text-xs text-foreground/80 font-semibold mb-2">{tx.symbiotePreventsTitle}</p>
+                <ul className="text-xs text-muted-foreground space-y-1.5">
+                  {tx.symbiotePreventsList.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <span className="text-red-400 shrink-0">✗</span>{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <p className="text-xs text-foreground/60 italic">{tx.symbioteCaption}</p>
+
+              {/* Binary boundary */}
+              <div>
+                <p className="text-sm text-foreground/80 font-semibold mb-2">{tx.symbioteBinaryTitle}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-3">{tx.symbioteBinaryDesc}</p>
+                <div className="flex flex-col gap-1 font-mono text-xs mb-2">
+                  {tx.symbioteBinaryStates.map((s, i) => (
+                    <div key={i} className={`px-3 py-1.5 border ${i === 0 ? "border-green-800/30 bg-green-900/10 text-green-400" : "border-red-800/30 bg-red-900/10 text-red-400"}`}>{s}</div>
+                  ))}
+                </div>
+                <p className="text-xs text-foreground/60">{tx.symbioteBinaryConclusion}</p>
+              </div>
+
+              {/* Signal */}
+              <div>
+                <p className="text-sm text-foreground/80 font-semibold mb-2">{tx.symbioteSignalTitle}</p>
+                <div className="overflow-x-auto mb-2">
+                  <table className="w-full text-sm border-collapse">
+                    <tbody>
+                      {tx.symbioteSignalRows.map((row, i) => (
+                        <tr key={i} className="border-b border-border">
+                          <td className="px-4 py-2 text-foreground/60" dangerouslySetInnerHTML={{ __html: row[0] }} />
+                          <td className="px-4 py-2 text-foreground/60" dangerouslySetInnerHTML={{ __html: row[1] }} />
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="text-xs text-foreground/60 italic">{tx.symbioteSignalCaption}</p>
+              </div>
+
+              {/* Audit implication */}
+              <div>
+                <p className="text-sm text-foreground/80 font-semibold mb-2">{tx.symbioteAuditTitle}</p>
+                <ul className="text-xs text-foreground/60 space-y-1.5 mb-2">
+                  {tx.symbioteAuditChecks.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <span className="text-green-400 shrink-0">✓</span>{item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs text-foreground/60 italic">{tx.symbioteAuditConclusion}</p>
+              </div>
+
+              {/* Integration boundary */}
+              <div className="bg-amber-900/10 border border-amber-800/30 px-4 py-3">
+                <span className="text-amber-400 font-bold text-xs block mb-1">{tx.symbioteBoundaryTitle}</span>
+                <span className="text-foreground/70 text-xs">{tx.symbioteBoundary}</span>
+              </div>
+
+              {/* Conclusion */}
+              <div className="border-l-2 border-violet-700 pl-5 py-2 bg-violet-900/5">
+                <p className="text-[0.7rem] uppercase tracking-widest text-muted-foreground mb-1">Conclusion</p>
+                <p className="text-sm text-foreground/70 leading-relaxed">{tx.symbioteConclusion}</p>
               </div>
             </div>
           </div>
