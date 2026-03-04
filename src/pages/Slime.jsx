@@ -10,6 +10,8 @@ const t = {
     sections: [
       { id: "overview",     label: "Overview" },
       { id: "architecture", label: "Architecture" },
+      { id: "secmodel",     label: "Security Model" },
+      { id: "threats",      label: "Threat Model" },
       { id: "audit",        label: "Audit" },
       { id: "review",       label: "AI Review" },
       { id: "patch",        label: "Patch v0.1" },
@@ -67,6 +69,42 @@ const t = {
       ["SLIME crash", "Socket closed → Actuator silent"],
       ["Degraded mode", "<span class='text-red-400'>Does not exist</span>"],
     ],
+
+    secModelTag: "Security Model",
+    secModelTitle: "Security Model Overview",
+    secModelSub: "Security is achieved through structural constraints distributed across layers. Each component removes an entire class of attacks.",
+    secModelHeaders: ["Layer", "Responsibility", "Property"],
+    secModelRows: [
+      ["<span class='text-foreground/80'>SYF-Core</span>", "Mathematical law", "Defines invariants"],
+      ["<span class='text-foreground/80'>SYF-Gate</span>", "Admission", "Fail-closed decision"],
+      ["<span class='text-foreground/80'>SYF-Shield</span>", "Irreversibility", "Non-regenerative capacity"],
+      ["<span class='text-foreground/80'>Anathema-Breaker</span>", "Law composition", "Deterministic resolution"],
+      ["<span class='text-foreground/80'>SLIME</span>", "Execution membrane", "Binary enforcement"],
+      ["<span class='text-foreground/80'>Actuator</span>", "Physical execution", "Mechanical effect"],
+    ],
+    secModelCaption: "Each layer removes an entire class of attacks — not by filtering, but by making them structurally unrepresentable.",
+    secModelMono: "law → admission → irreversibility → composition → membrane → effect",
+
+    threatTag: "Threat Model",
+    threatTitle: "Threat Model",
+    threatSub: "SLIME is designed to enforce structural impossibility at the point of effect. The system assumes the following threat model.",
+    threatInScope: "In scope",
+    threatInScopeList: [
+      "Malicious agents attempting unauthorized actions",
+      "Replay attempts",
+      "Privilege escalation attempts",
+      "Adaptive probing of authorization boundaries",
+      "Malformed payloads",
+    ],
+    threatOutScope: "Out of scope",
+    threatOutScopeList: [
+      "Full OS compromise",
+      "Physical actuator tampering",
+      "Hardware faults",
+      "Side-channel leakage outside the SLIME boundary",
+    ],
+    threatAssumptionTitle: "Security assumption",
+    threatAssumption: "The actuator and the SLIME host are assumed to be under operator control. SLIME enforces authorization structure, not system integrity.",
 
     auditTag: "Conformity Audit",
     auditTitle: "Audit Report — Manus AI",
@@ -247,6 +285,8 @@ const t = {
     sections: [
       { id: "overview",     label: "Vue d'ensemble" },
       { id: "architecture", label: "Architecture" },
+      { id: "secmodel",     label: "Modèle Sécurité" },
+      { id: "threats",      label: "Menaces" },
       { id: "audit",        label: "Audit" },
       { id: "review",       label: "Revue AI" },
       { id: "patch",        label: "Patch v0.1" },
@@ -304,6 +344,42 @@ const t = {
       ["Crash SLIME", "Socket fermée → Actuator muet"],
       ["Mode dégradé", "<span class='text-red-400'>Inexistant</span>"],
     ],
+
+    secModelTag: "Modèle de Sécurité",
+    secModelTitle: "Vue d'Ensemble du Modèle de Sécurité",
+    secModelSub: "La sécurité est obtenue par des contraintes structurelles distribuées entre les couches. Chaque composant élimine une classe entière d'attaques.",
+    secModelHeaders: ["Couche", "Responsabilité", "Propriété"],
+    secModelRows: [
+      ["<span class='text-foreground/80'>SYF-Core</span>", "Loi mathématique", "Définit les invariants"],
+      ["<span class='text-foreground/80'>SYF-Gate</span>", "Admission", "Décision fail-closed"],
+      ["<span class='text-foreground/80'>SYF-Shield</span>", "Irréversibilité", "Capacité non-régénérative"],
+      ["<span class='text-foreground/80'>Anathema-Breaker</span>", "Composition de loi", "Résolution déterministe"],
+      ["<span class='text-foreground/80'>SLIME</span>", "Membrane d'exécution", "Enforcement binaire"],
+      ["<span class='text-foreground/80'>Actuator</span>", "Exécution physique", "Effet mécanique"],
+    ],
+    secModelCaption: "Chaque couche élimine une classe entière d'attaques — non par filtrage, mais en les rendant structurellement non-représentables.",
+    secModelMono: "loi → admission → irréversibilité → composition → membrane → effet",
+
+    threatTag: "Modèle de Menaces",
+    threatTitle: "Modèle de Menaces",
+    threatSub: "SLIME est conçu pour enforcer l'impossibilité structurelle au point d'effet. Le système suppose le modèle de menaces suivant.",
+    threatInScope: "Dans le périmètre",
+    threatInScopeList: [
+      "Agents malveillants tentant des actions non autorisées",
+      "Tentatives de replay",
+      "Tentatives d'escalade de privilèges",
+      "Sondage adaptatif des frontières d'autorisation",
+      "Payloads malformés",
+    ],
+    threatOutScope: "Hors périmètre",
+    threatOutScopeList: [
+      "Compromission complète de l'OS",
+      "Altération physique de l'actuator",
+      "Pannes matérielles",
+      "Fuites par canaux auxiliaires hors de la frontière SLIME",
+    ],
+    threatAssumptionTitle: "Hypothèse de sécurité",
+    threatAssumption: "L'actuator et l'hôte SLIME sont supposés sous contrôle de l'opérateur. SLIME enforce la structure d'autorisation, pas l'intégrité système.",
 
     auditTag: "Audit de Conformité",
     auditTitle: "Rapport d'Audit — Manus AI",
@@ -676,6 +752,58 @@ export default function SlimePage() {
                 <Table headers={tx.failHeaders} rows={tx.failRows} />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── Security Model ── */}
+        <section id="secmodel">
+          <SectionTag>{tx.secModelTag}</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{tx.secModelTitle}</h2>
+          <p className="text-muted-foreground text-sm mb-8 max-w-xl">{tx.secModelSub}</p>
+
+          <div className="border border-border bg-card p-5 mb-6">
+            <Table headers={tx.secModelHeaders} rows={tx.secModelRows} />
+          </div>
+
+          <div className="font-mono text-sm text-blue-400 bg-white/5 border border-blue-900/40 px-5 py-3 mb-4 text-center tracking-wide">
+            {tx.secModelMono}
+          </div>
+
+          <p className="text-xs text-muted-foreground leading-relaxed italic">{tx.secModelCaption}</p>
+        </section>
+
+        {/* ── Threat Model ── */}
+        <section id="threats">
+          <SectionTag>{tx.threatTag}</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{tx.threatTitle}</h2>
+          <p className="text-muted-foreground text-sm mb-8 max-w-xl">{tx.threatSub}</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="border border-green-800/30 bg-green-900/5 p-5">
+              <p className="text-green-400 text-xs font-bold uppercase tracking-widest mb-3">{tx.threatInScope}</p>
+              <ul className="text-xs text-foreground/60 space-y-2">
+                {tx.threatInScopeList.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="text-green-400 shrink-0 mt-0.5">✓</span>{item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="border border-red-800/30 bg-red-900/5 p-5">
+              <p className="text-red-400 text-xs font-bold uppercase tracking-widest mb-3">{tx.threatOutScope}</p>
+              <ul className="text-xs text-foreground/60 space-y-2">
+                {tx.threatOutScopeList.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="text-red-400 shrink-0 mt-0.5">✗</span>{item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-l-2 border-amber-700 pl-5 py-3 bg-amber-900/5 border border-amber-900/20">
+            <p className="text-[0.7rem] uppercase tracking-widest text-amber-400 mb-1">{tx.threatAssumptionTitle}</p>
+            <p className="text-sm text-foreground/70 leading-relaxed">{tx.threatAssumption}</p>
           </div>
         </section>
 
