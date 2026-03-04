@@ -13,6 +13,8 @@ const t = {
       { id: "audit",        label: "Audit" },
       { id: "review",       label: "AI Review" },
       { id: "patch",        label: "Patch v0.1" },
+      { id: "conformance",  label: "Conformance" },
+      { id: "security",     label: "Security" },
       { id: "specs",        label: "Specs" },
     ],
     heroTag: "CANON / SEALED",
@@ -146,6 +148,47 @@ const t = {
     convergenceGpt: "+ Additional GPT precision",
     convergenceGptList: ["as_nanos() → u128, use as_secs() → u64", "Invalid frame on separate connection", "test_slime.sh: grep silence non-canonical logs", "Option B = only clean choice"],
 
+    conformanceTag: "Full-Stack Conformance",
+    conformanceTitle: "Cross-Layer Integration Contract",
+    conformanceSub: "Defines the non-overlapping roles and invariant ownership across all SYF components. Each component enforces its own slice — no overlap, no gaps.",
+    conformancePills: ["Gate · Shield · AB · SLIME · Actuator", "Integration Rules", "Non-Canon (governs integration only)"],
+    conformanceRoles: [
+      { component: "SYF-Gate", role: "Admission / bounds / invariant check", icon: "🚪" },
+      { component: "SYF-Shield", role: "Capacity accounting / EP coupling", icon: "🛡️" },
+      { component: "AB-S", role: "Law composition (Gate × Shield)", icon: "⚖️" },
+      { component: "SLIME", role: "Binary membrane (AUTHORIZED / IMPOSSIBLE)", icon: "🧠" },
+      { component: "Actuator", role: "Effect execution boundary", icon: "⚙️" },
+    ],
+    conformanceRulesTitle: "Integration Rules",
+    conformanceRules: [
+      { id: "R-1", title: "Reason codes are audit-only", desc: "If Gate produces a reason_code, it MUST NOT be observable by any agent/client. Allowed: internal logs, operator audit, offline reports." },
+      { id: "R-2", title: "Public interface is binary", desc: "Externally observable outcomes: AUTHORIZED (frame emitted) or IMPOSSIBLE (no frame / silence). No third state." },
+      { id: "R-3", title: "No adaptive retry loops", desc: "No component may expose a signal that helps an agent search the boundary. Same inputs → same verdict." },
+      { id: "R-4", title: "Capacity / Budget / Progression sealed", desc: "Non-writable by integrators (private inners, getters only). Mutated only inside the law via pub(crate) consume/tick." },
+      { id: "R-5", title: "Domain IDs are u64 end-to-end", desc: "All domain identifiers reaching SLIME egress MUST be representable as u64. No truncation to u32/u16 anywhere." },
+    ],
+    conformanceGithub: "View FULL_STACK_CONFORMANCE.md",
+    conformanceGithubUrl: "https://github.com/AnathemaOfficial/SLIME/blob/main/FULL_STACK_CONFORMANCE.md",
+
+    securityTag: "Security Invariants",
+    securityTitle: "Structural Guarantees of the Stack",
+    securitySub: "These invariants are not policies — they are structural properties enforced by type systems, compilation, and architecture. They cannot be disabled at runtime.",
+    securityInvariants: [
+      { id: "S1", title: "Determinism", desc: "Same input + same state → same verdict. No randomness, no timing dependency, no external oracle in the decision path.", enforcer: "AB-S + SLIME" },
+      { id: "S2", title: "Fail-Closed", desc: "On any error, ambiguity, or missing resource: DENY / silence. No degraded mode, no fallback, no partial authorization.", enforcer: "Gate + SLIME" },
+      { id: "S3", title: "No Oracle Feedback", desc: "No component exposes signals that help agents search the authorization boundary. Observability is forensics-only, never input to the law.", enforcer: "All layers" },
+      { id: "S4", title: "Monotonic Capacity", desc: "The action space can only shrink over time. Capacity decreases, never increases. possible_actions(t+1) ⊆ possible_actions(t).", enforcer: "Shield + AB" },
+      { id: "S5", title: "Irreversibility Coupling (EP)", desc: "The Engagement Point marks first partial irreversible commitment. Once crossed: Active → Sealed (typestate). No going back.", enforcer: "Shield" },
+      { id: "S6", title: "Binary Enforcement", desc: "32-byte frame emitted = AUTHORIZED. Silence = IMPOSSIBLE. No reason codes, no error messages, no semantic feedback in egress.", enforcer: "SLIME + Actuator" },
+      { id: "S7", title: "Law Sealing", desc: "The invariant I is compiled into the binary. Not configurable, not interpretable at runtime. Modification requires recompilation + redeployment.", enforcer: "AB-S" },
+    ],
+    securityRepos: [
+      { name: "SYF-Gate", url: "https://github.com/AnathemaOfficial/SYF-Gate", desc: "Admission, bounds, invariant check" },
+      { name: "SYF-Shield", url: "https://github.com/AnathemaOfficial/SYF-Shield", desc: "Capacity, progression, irreversibility" },
+      { name: "Anathema-Breaker", url: "https://github.com/AnathemaOfficial/Anathema-Breaker", desc: "Law composition, sealed budget" },
+      { name: "SLIME", url: "https://github.com/AnathemaOfficial/SLIME", desc: "Binary membrane, 32B egress ABI" },
+    ],
+
     patchTag: "Patch v0.1",
     patchTitle: "patch_v0_1.diff",
     patchSub: "Applied via <code class='text-blue-400'>git apply patch_v0_1.diff</code>. Zero law change, hardening only.",
@@ -207,6 +250,8 @@ const t = {
       { id: "audit",        label: "Audit" },
       { id: "review",       label: "Revue AI" },
       { id: "patch",        label: "Patch v0.1" },
+      { id: "conformance",  label: "Conformité" },
+      { id: "security",     label: "Sécurité" },
       { id: "specs",        label: "Spécifications" },
     ],
     heroTag: "CANON / SEALED",
@@ -339,6 +384,47 @@ const t = {
     convergenceAgreeList: ["chrono → u64 brut", "Boucle read_exact(32) = fix canon", "Simulateur doit être NONCANON", "slime-egress group = bonne recommandation", "Prototype fonctionnellement solide"],
     convergenceGpt: "+ Précision GPT additionnelle",
     convergenceGptList: ["as_nanos() → u128, prendre as_secs() → u64", "Frame invalide sur connexion séparée", "test_slime.sh : grep silence logs non-canoniques", "Option B = seul choix propre"],
+
+    conformanceTag: "Conformité Full-Stack",
+    conformanceTitle: "Contrat d'Intégration Inter-Couches",
+    conformanceSub: "Définit les rôles non-chevauchants et la propriété des invariants à travers tous les composants SYF. Chaque composant enforce sa tranche — aucun chevauchement, aucun vide.",
+    conformancePills: ["Gate · Shield · AB · SLIME · Actuator", "Règles d'intégration", "Non-canon (gouverne l'intégration uniquement)"],
+    conformanceRoles: [
+      { component: "SYF-Gate", role: "Admission / bornes / vérification d'invariants", icon: "🚪" },
+      { component: "SYF-Shield", role: "Comptabilité de capacité / couplage EP", icon: "🛡️" },
+      { component: "AB-S", role: "Composition de loi (Gate × Shield)", icon: "⚖️" },
+      { component: "SLIME", role: "Membrane binaire (AUTHORIZED / IMPOSSIBLE)", icon: "🧠" },
+      { component: "Actuator", role: "Frontière d'exécution des effets", icon: "⚙️" },
+    ],
+    conformanceRulesTitle: "Règles d'Intégration",
+    conformanceRules: [
+      { id: "R-1", title: "Les codes de raison sont audit-only", desc: "Si Gate produit un reason_code, il NE DOIT PAS être observable par un agent/client. Autorisé : logs internes, audit opérateur, rapports hors-ligne." },
+      { id: "R-2", title: "L'interface publique est binaire", desc: "Résultats observables : AUTHORIZED (frame émise) ou IMPOSSIBLE (pas de frame / silence). Aucun troisième état." },
+      { id: "R-3", title: "Aucune boucle de retry adaptative", desc: "Aucun composant ne peut exposer un signal aidant un agent à chercher la frontière. Mêmes entrées → même verdict." },
+      { id: "R-4", title: "Capacité / Budget / Progression scellés", desc: "Non-modifiables par les intégrateurs (champs privés, getters uniquement). Mutés uniquement dans la loi via pub(crate) consume/tick." },
+      { id: "R-5", title: "Domain IDs en u64 de bout en bout", desc: "Tous les identifiants de domaine atteignant l'egress SLIME DOIVENT être représentables en u64. Aucune troncation u32/u16 nulle part." },
+    ],
+    conformanceGithub: "Voir FULL_STACK_CONFORMANCE.md",
+    conformanceGithubUrl: "https://github.com/AnathemaOfficial/SLIME/blob/main/FULL_STACK_CONFORMANCE.md",
+
+    securityTag: "Invariants de Sécurité",
+    securityTitle: "Garanties Structurelles de la Stack",
+    securitySub: "Ces invariants ne sont pas des politiques — ce sont des propriétés structurelles enforcées par les systèmes de types, la compilation et l'architecture. Ils ne peuvent pas être désactivés à l'exécution.",
+    securityInvariants: [
+      { id: "S1", title: "Déterminisme", desc: "Même entrée + même état → même verdict. Aucune aléatoire, aucune dépendance temporelle, aucun oracle externe dans le chemin de décision.", enforcer: "AB-S + SLIME" },
+      { id: "S2", title: "Fail-Closed", desc: "En cas d'erreur, d'ambiguïté ou de ressource manquante : DENY / silence. Aucun mode dégradé, aucun fallback, aucune autorisation partielle.", enforcer: "Gate + SLIME" },
+      { id: "S3", title: "Aucun Feedback Oracle", desc: "Aucun composant n'expose de signaux aidant les agents à chercher la frontière d'autorisation. L'observabilité est forensics-only, jamais input de la loi.", enforcer: "Toutes couches" },
+      { id: "S4", title: "Capacité Monotone", desc: "L'espace d'actions ne peut que rétrécir. La capacité diminue, n'augmente jamais. possible_actions(t+1) ⊆ possible_actions(t).", enforcer: "Shield + AB" },
+      { id: "S5", title: "Couplage d'Irréversibilité (EP)", desc: "Le Point d'Engagement marque le premier engagement partiel irréversible. Une fois franchi : Active → Sealed (typestate). Pas de retour.", enforcer: "Shield" },
+      { id: "S6", title: "Enforcement Binaire", desc: "Frame 32 bytes émise = AUTHORIZED. Silence = IMPOSSIBLE. Aucun code de raison, aucun message d'erreur, aucun feedback sémantique en egress.", enforcer: "SLIME + Actuator" },
+      { id: "S7", title: "Scellement de Loi", desc: "L'invariant I est compilé dans le binaire. Non configurable, non interprétable à l'exécution. La modification exige recompilation + redéploiement.", enforcer: "AB-S" },
+    ],
+    securityRepos: [
+      { name: "SYF-Gate", url: "https://github.com/AnathemaOfficial/SYF-Gate", desc: "Admission, bornes, vérification d'invariants" },
+      { name: "SYF-Shield", url: "https://github.com/AnathemaOfficial/SYF-Shield", desc: "Capacité, progression, irréversibilité" },
+      { name: "Anathema-Breaker", url: "https://github.com/AnathemaOfficial/Anathema-Breaker", desc: "Composition de loi, budget scellé" },
+      { name: "SLIME", url: "https://github.com/AnathemaOfficial/SLIME", desc: "Membrane binaire, ABI egress 32B" },
+    ],
 
     patchTag: "Patch v0.1",
     patchTitle: "patch_v0_1.diff",
@@ -784,6 +870,99 @@ export default function SlimePage() {
                 { type: "add", code: "let mut bad = UnixStream::connect(SOCKET_PATH)?;" },
                 { type: "add", code: "bad.write_all(&[0u8; 31])?; // separate connection" },
               ]} />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Conformance ── */}
+        <section id="conformance">
+          <SectionTag>{tx.conformanceTag}</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{tx.conformanceTitle}</h2>
+          <p className="text-muted-foreground text-sm mb-6 max-w-xl">{tx.conformanceSub}</p>
+          <div className="flex flex-wrap gap-2 mb-8">
+            {tx.conformancePills.map((p, i) => <Pill key={i} variant={i === 0 ? "gold" : i === 2 ? "red" : "default"}>{p}</Pill>)}
+          </div>
+
+          {/* Role pipeline */}
+          <div className="border border-border bg-card p-5 mb-6">
+            <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground mb-4">Pipeline</p>
+            <div className="flex flex-col items-center gap-0 font-mono text-xs">
+              {tx.conformanceRoles.map((r, i) => (
+                <React.Fragment key={r.component}>
+                  <div className="w-full px-3 py-2 border border-border bg-background text-center hover:border-blue-800/50 hover:bg-blue-900/5 transition-colors">
+                    <div className="text-foreground/80 font-semibold">{r.icon} {r.component}</div>
+                    <div className="text-[0.65rem] text-muted-foreground mt-0.5">{r.role}</div>
+                  </div>
+                  {i < tx.conformanceRoles.length - 1 && <div className="text-blue-500 text-base leading-none py-0.5">↓</div>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+
+          {/* Integration rules */}
+          <div className="mb-6">
+            <h3 className="text-xs uppercase tracking-widest text-foreground/50 mb-3">{tx.conformanceRulesTitle}</h3>
+            <ul className="divide-y divide-border border border-border">
+              {tx.conformanceRules.map(({ id, title, desc }) => (
+                <li key={id} className="flex gap-3 py-3 px-4">
+                  <span className="shrink-0 mt-0.5 text-[0.7rem] font-bold text-amber-400 bg-white/5 px-2 py-0.5 h-fit">{id}</span>
+                  <div>
+                    <div className="text-sm text-foreground/80 font-medium mb-0.5">{title}</div>
+                    <p className="text-xs text-foreground/50 leading-relaxed">{desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <a
+            href={tx.conformanceGithubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 border border-border text-xs font-mono text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+          >
+            <ExternalLink className="h-3.5 w-3.5" /> {tx.conformanceGithub}
+          </a>
+        </section>
+
+        {/* ── Security ── */}
+        <section id="security">
+          <SectionTag>{tx.securityTag}</SectionTag>
+          <h2 className="text-2xl font-bold text-foreground mb-2">{tx.securityTitle}</h2>
+          <p className="text-muted-foreground text-sm mb-8 max-w-xl">{tx.securitySub}</p>
+
+          <div className="flex flex-col gap-3 mb-8">
+            {tx.securityInvariants.map(({ id, title, desc, enforcer }) => (
+              <div key={id} className="border border-border bg-card p-4 hover:border-border/80 transition-colors">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="shrink-0 text-[0.7rem] font-bold text-blue-400 bg-white/5 px-2 py-0.5">{id}</span>
+                  <span className="text-sm font-semibold text-foreground/80">{title}</span>
+                  <Pill variant="default">{enforcer}</Pill>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed pl-10">{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Ecosystem repos */}
+          <div className="border border-border bg-card p-5">
+            <p className="text-[0.65rem] uppercase tracking-widest text-muted-foreground mb-4">Ecosystem</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {tx.securityRepos.map((r) => (
+                <a
+                  key={r.name}
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 px-3 py-2.5 border border-border hover:border-blue-800/50 hover:bg-blue-900/5 transition-colors"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-blue-400 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="text-sm font-semibold text-foreground/80">{r.name}</div>
+                    <div className="text-[0.65rem] text-muted-foreground">{r.desc}</div>
+                  </div>
+                </a>
+              ))}
             </div>
           </div>
         </section>
