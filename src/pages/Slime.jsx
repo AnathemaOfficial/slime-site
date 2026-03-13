@@ -298,7 +298,7 @@ const t = {
       ["Version", "v0.1 (hardening · law unchanged)"],
       ["Status", "CANON / SEALED"],
       ["Stack", "Rust 60% · Shell 18% · HTML 15% · Python 7%"],
-      ["Repo", '<span class="text-muted-foreground opacity-50">Private — open source coming soon</span>'],
+      ["Repo", '<a href="https://github.com/AnathemaOfficial/SLIME-Enterprise" target="_blank" class="text-blue-400 hover:underline">AnathemaOfficial/SLIME-Enterprise</a>'],
     ],
     ingressLabel: "Ingress API",
     ingressRows: [
@@ -331,8 +331,8 @@ const t = {
     ],
     asciiLabel: "System flow",
     ctaTitle: "SLIME is under construction",
-    ctaSub: "The project is actively being built. Source code will be available soon.",
-    ctaGithub: "Source — coming soon",
+    ctaSub: "The project is open source. Explore the code, specs, and proofs on GitHub.",
+    ctaGithub: "View on GitHub",
     ctaSpec: "v0.1 Specification",
     ingressExampleLabel: "Request example",
     footerText: "Prototype audited by Manus AI · Analyzed by Claude & GPT-4 · © 2026 AnathemaOfficial",
@@ -631,7 +631,7 @@ const t = {
       ["Version", "v0.1 (durcissement · loi inchangée)"],
       ["Statut", "CANON / SEALED"],
       ["Stack", "Rust 60% · Shell 18% · HTML 15% · Python 7%"],
-      ["Repo", '<span class="text-muted-foreground opacity-50">Privé — open source bientôt disponible</span>'],
+      ["Repo", '<a href="https://github.com/AnathemaOfficial/SLIME-Enterprise" target="_blank" class="text-blue-400 hover:underline">AnathemaOfficial/SLIME-Enterprise</a>'],
     ],
     ingressLabel: "Ingress API",
     ingressRows: [
@@ -664,8 +664,8 @@ const t = {
     ],
     asciiLabel: "Flux système",
     ctaTitle: "SLIME est en construction",
-    ctaSub: "Le projet est activement en développement. Le code source sera disponible bientôt.",
-    ctaGithub: "Source — bientôt disponible",
+    ctaSub: "Le projet est open source. Explorez le code, les specs et les preuves sur GitHub.",
+    ctaGithub: "Voir sur GitHub",
     ctaSpec: "Spécification v0.1",
     ingressExampleLabel: "Exemple de requête",
     footerText: "Prototype audité par Manus AI · Analysé par Claude & GPT-4 · © 2026 AnathemaOfficial",
@@ -777,12 +777,13 @@ export default function SlimePage() {
           <div className="flex items-center gap-2">
             {/* FR/EN toggle */}
             <div className="flex items-center border border-border rounded-lg overflow-hidden text-xs font-mono">
-              <button onClick={() => setLang("en")} className={`px-3 py-1.5 transition-colors ${lang === "en" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}>EN</button>
-              <button onClick={() => setLang("fr")} className={`px-3 py-1.5 transition-colors ${lang === "fr" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}>FR</button>
+              <button onClick={() => setLang("en")} className={`px-3 py-1.5 transition-colors ${lang === "en" ? "bg-foreground text-background font-semibold" : "text-muted-foreground hover:text-foreground"}`}>EN</button>
+              <span className="w-px bg-border" />
+              <button onClick={() => setLang("fr")} className={`px-3 py-1.5 transition-colors ${lang === "fr" ? "bg-foreground text-background font-semibold" : "text-muted-foreground hover:text-foreground"}`}>FR</button>
             </div>
-            <span className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground opacity-50 cursor-default">
-              Source — soon
-            </span>
+            <a href="https://github.com/AnathemaOfficial" target="_blank" rel="noopener noreferrer" className="hidden sm:flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <ExternalLink className="h-3 w-3" /> GitHub
+            </a>
           </div>
         </div>
       </nav>
@@ -1419,11 +1420,14 @@ Content-Type: application/json
             <p className="text-sm text-muted-foreground max-w-md">{tx.ctaSub}</p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-            <span
-              className="flex items-center gap-2 px-4 py-2 bg-foreground/20 text-muted-foreground text-xs font-mono cursor-default opacity-50"
+            <a
+              href="https://github.com/AnathemaOfficial/SLIME-Enterprise"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 bg-foreground/10 hover:bg-foreground/20 text-foreground text-xs font-mono transition-colors"
             >
               {tx.ctaGithub}
-            </span>
+            </a>
             <span
               className="flex items-center gap-2 px-4 py-2 border border-border text-xs font-mono text-muted-foreground cursor-default opacity-50"
             >

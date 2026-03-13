@@ -202,13 +202,13 @@ export default function SyfcorpHomepage() {
               <div className="flex items-center border border-border rounded-lg overflow-hidden text-xs font-mono">
                 <button
                   onClick={() => setLang("en")}
-                  className={`px-3 py-1.5 transition-colors ${lang === "en" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`px-3 py-1.5 transition-colors ${lang === "en" ? "bg-foreground text-background font-semibold" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   EN
                 </button>
                 <button
                   onClick={() => setLang("fr")}
-                  className={`px-3 py-1.5 transition-colors ${lang === "fr" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`px-3 py-1.5 transition-colors ${lang === "fr" ? "bg-foreground text-background font-semibold" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   FR
                 </button>
@@ -233,8 +233,8 @@ export default function SyfcorpHomepage() {
             <div className="flex items-center gap-2">
               {/* Mobile lang toggle */}
               <div className="flex sm:hidden items-center border border-border rounded-lg overflow-hidden text-xs font-mono">
-                <button onClick={() => setLang("en")} className={`px-3 py-1.5 transition-colors ${lang === "en" ? "bg-foreground text-background" : "text-muted-foreground"}`}>EN</button>
-                <button onClick={() => setLang("fr")} className={`px-3 py-1.5 transition-colors ${lang === "fr" ? "bg-foreground text-background" : "text-muted-foreground"}`}>FR</button>
+                <button onClick={() => setLang("en")} className={`px-3 py-1.5 transition-colors ${lang === "en" ? "bg-foreground text-background font-semibold" : "text-muted-foreground"}`}>EN</button>
+                <button onClick={() => setLang("fr")} className={`px-3 py-1.5 transition-colors ${lang === "fr" ? "bg-foreground text-background font-semibold" : "text-muted-foreground"}`}>FR</button>
               </div>
               <div className="relative w-full sm:w-[320px]">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -347,7 +347,7 @@ export default function SyfcorpHomepage() {
             </div>
             <div className="flex items-center gap-4">
               <a className="hover:text-foreground transition-colors underline underline-offset-4" href="/terms">{tx.terms}</a>
-              <span className="opacity-50 cursor-default">Open source — coming soon</span>
+              <a href="https://github.com/AnathemaOfficial" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline underline-offset-4">Open source on GitHub</a>
             </div>
           </div>
         </footer>
